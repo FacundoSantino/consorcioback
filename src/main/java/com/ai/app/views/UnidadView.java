@@ -1,0 +1,76 @@
+package com.ai.app.views;
+
+import com.ai.app.negocio.Edificio;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+@Setter
+@Getter
+@NoArgsConstructor
+public class UnidadView {
+
+	private int id;
+	private String piso;
+	private String numero;
+	private boolean habitado;
+	private EdificioView edificio;
+	
+	public UnidadView(String piso, String numero, Edificio edificio) {
+		this.piso=piso;
+		this.numero=numero;
+		this.edificio=edificio.toView();
+	}
+
+
+	public UnidadView(int id, String piso, String numero, boolean habitado, EdificioView edificio) {
+		this.id = id;
+		this.piso = piso;
+		this.numero = numero;
+		this.habitado = habitado;
+		this.edificio = edificio;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public String getPiso() {
+		return piso;
+	}
+
+	public void setPiso(String piso) {
+		this.piso = piso;
+	}
+
+	public String getNumero() {
+		return numero;
+	}
+
+	public void setNumero(String numero) {
+		this.numero = numero;
+	}
+
+	public boolean isHabitado() {
+		return this.habitado;
+	}
+
+	public void setHabitado(boolean habitado) {
+		this.habitado = habitado;
+	}
+
+	public EdificioView getEdificio() {
+		return edificio;
+	}
+
+	public void setEdificio(EdificioView edificio) {
+		this.edificio = edificio;
+	}
+	
+	public String toString() {
+		return piso + " " + numero;
+	}
+}
