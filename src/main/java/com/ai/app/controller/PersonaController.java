@@ -121,6 +121,17 @@ public class PersonaController {
                 , Entidad.persona,documento,"El usuario "+usuario+" actualizó los datos de la persona de documento "+documento+".");
         return ResponseEntity.status(HttpStatus.CREATED).body(service.update(persona,documento));
     }
+    @PutMapping(params={"documento","usuario","nombreNuevo"})
+    public ResponseEntity<?> actualizarPersona(@RequestParam String nombreNuevo,@RequestParam String documento,@RequestParam String usuario) {
+        Optional<Persona> oP=service.findById(documento);
+        if(oP.isPresent()){
+            Persona p=oP.get();
+            p.setNombre(nombreNuevo);
+            service.guardar(p);
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.notFound().build();
+    }
 
 
     @PutMapping(path="/registro",params= {"usuario","contrasenia","documento"})
