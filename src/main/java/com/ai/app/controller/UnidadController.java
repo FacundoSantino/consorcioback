@@ -138,6 +138,20 @@ public class UnidadController {
     	return ResponseEntity.status(HttpStatus.CREATED).body(service.actualizar(unidad,id));
     }
 
+    @PutMapping(path="/{id}",params={"usuario","piso","numero"})
+    public ResponseEntity<?> actualizarUnidad(@RequestParam String usuario, @RequestParam String piso, @RequestParam String numero,@PathVariable int id){
+        Optional<Unidad> oU=service.findById(id);
+        if(oU.isPresent()){
+            Unidad unidad=oU.get();
+            unidad.setNumero(numero);
+            unidad.setPiso(piso);
+            service.actualizar(unidad,id);
+            return ResponseEntity.ok().build();
+        }
+
+        return ResponseEntity.notFound().build();
+    }
+
 
 
 
