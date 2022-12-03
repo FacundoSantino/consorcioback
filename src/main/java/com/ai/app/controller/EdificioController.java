@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -150,6 +151,18 @@ public class EdificioController {
     	aC.guardarAccion(pS.findById(usuario).get(), LocalDateTime.now(), "updateEdificio", Entidad.edificio, ""+id,
         		"El usuario "+usuario+" actualizó el edificio"+id+"  exitosamente.");
         return ResponseEntity.status(HttpStatus.CREATED).body(service.update(edificio,id));
+    }
+
+    @PutMapping(path="/{codigo}",params={"usuario","nombre","direccion"})
+    public ResponseEntity<?> actualizarEdificio(@RequestParam String usuario,@RequestParam String nombre,@RequestParam String direccion, @PathVariable int codigo){
+        Edificio oE=service.findById(codigo);
+        if(oE!=null){
+            oE.setNombre(nombre);
+            oE.setDireccion(direccion);
+            service.save(oE);
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.notFound().build();
     }
 
     //D
