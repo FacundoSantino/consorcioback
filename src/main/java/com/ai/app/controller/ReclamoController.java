@@ -125,7 +125,7 @@ public class ReclamoController {
                     }
                     for(Persona d:u.getDuenios())
                     {
-                        if(d.getDocumento().equals(documento))
+                        if(d.getDocumento().equals(documento) || p.isAdministrador())
                         {
                             if(!agregar.contains(u)){
                                 agregar.add(u);
