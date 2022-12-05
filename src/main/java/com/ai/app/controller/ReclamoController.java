@@ -2,6 +2,7 @@ package com.ai.app.controller;
 
 import com.ai.app.negocio.*;
 import com.ai.app.service.*;
+import com.ai.app.views.AccionView;
 import com.ai.app.views.ReclamoView;
 import com.ai.app.views.UnidadView;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,10 +30,12 @@ public class ReclamoController {
     private final ImagenService iS;
     private final UnidadService uS;
 
+    private final AccionService aS;
+
     private final AccionController aC;
 
     @Autowired
-    public ReclamoController(ReclamoService service, PersonaService pS, EdificioService eS,UnidadService uS,ImagenService iS, AccionController aC)
+    public ReclamoController(ReclamoService service, PersonaService pS, EdificioService eS,UnidadService uS,ImagenService iS, AccionController aC,AccionService aS)
     {
         this.service=service;
         this.eS=eS;
@@ -40,6 +43,7 @@ public class ReclamoController {
         this.uS=uS;
         this.iS=iS;
         this.aC=aC;
+        this.aS=aS;
     }
 
 
@@ -217,6 +221,22 @@ public class ReclamoController {
                 .collect(Collectors.toList());
     }
 
+    @GetMapping(path="/cambios",params={"usuario","idReclamo"})
+    public List<AccionView> cambiosPorReclamo(@RequestParam String usuario, @RequestParam int idReclamo){
+        Iterable<Accion> acciones=aS.findAll();
+        List<AccionView> devolucion=new ArrayList<>();
+        for(Accion a:acciones){
+            if(a.getOperacion().equals("actualizarEstadoReclamo")){
+                if(a.getIdEntidad().equals(Integer.toString(idReclamo))){
+                    devolucion.add(a.toView());
+                }
+            }
+        }
+        return StreamSupport
+                .stream(devolucion.spliterator(),false)
+                .collect(Collectors.toList());
+    }
+
     @GetMapping(path="/unidades",params={"codigoEdificio","piso","numero","usuario"})
     public List<ReclamoView> reclamosPorUnidad(@RequestParam int codigoEdificio,@RequestParam String piso,@RequestParam String numero,@RequestParam String usuario) {
         List<ReclamoView> resultado = new ArrayList<ReclamoView>();
@@ -316,9 +336,9 @@ public class ReclamoController {
                     usuario+" intentó actualizar el estado del reclamo id "+numeroReclamo+" pero este no existía.");
             return ResponseEntity.notFound().build();
         }
-        reclamo.setEstado(estadoNuevo);
         aC.guardarAccion(pS.buscarPorUsuario(usuario), LocalDateTime.now(),"actualizarEstadoReclamo",Entidad.reclamo,""+numeroReclamo,"El usuario "+
                 usuario+" actualizó el estado del reclamo de id "+numeroReclamo+" de "+reclamo.getEstado()+" a "+estadoNuevo+" ya que ,según escribió: "+motivo+".");
+        reclamo.setEstado(estadoNuevo);
         return ResponseEntity.status(HttpStatus.CREATED).body(service.actualizar(reclamo, numeroReclamo));
 
     }
