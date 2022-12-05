@@ -128,6 +128,9 @@ public class Reclamo implements Serializable {
 		for(Imagen i: this.imagenes){
 			imageness.add(i.toView());
 		}
+		if(unidad==null){
+			return new ReclamoView(idReclamo,reclamante.toView(),edificio.toView(),ubicacion,descripcion,null,estado,imageness);
+		}
 		return new ReclamoView(idReclamo,reclamante.toView(),edificio.toView(),ubicacion,descripcion,unidad.toView(),estado,imageness);
 	}
 
